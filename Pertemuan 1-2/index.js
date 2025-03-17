@@ -1,63 +1,113 @@
-class Buku { // class Buku
-    // constructor untuk membuat objek buku dengan judul dan penulis
-
-    constructor(judul, penulis) {
-
-        // properti judul dan penulis dengan nilai yang diterima dari parameter
-        // paramater judul dan penulis akan diisi ketika membuat objek baru
-
-        this.judul = judul;
-        this.penulis = penulis;
+// ============================
+//  ABSTRAKSI (Abstraction)
+// ============================
+// Kita membuat class abstrak "Pasien" yang hanya bisa diwarisi, bukan langsung dibuat objeknya.
+class Pasien {
+    constructor(nama, umur, keluhan) {
+        if (this.constructor === Pasien) {
+            throw new Error("Class Pasien adalah abstrak dan tidak bisa dibuat objek langsung.");
+        }
+        this.nama = nama;
+        this.umur = umur;
+        this.keluhan = keluhan;
     }
 
-    // method info() untuk menampilkan informasi buku
-    // method ini akan mengembalikan string yang berisi judul dan penulis buku
-
-    info() { 
-        return `Buku: ${this.judul}, ditulis oleh ${this.penulis}.`; 
-    }
-}
-
-// class Perpustakaan
-// class ini berfungsi untuk menyimpan koleksi buku
-
-class Perpustakaan {
-
-    // constructor untuk membuat objek perpustakaan
-    // properti koleksi dengan nilai array kosong
-    constructor() {
-        this.koleksi = [];
-    }
-
-    // method TambahBuku() untuk menambahkan buku ke koleksi
-    // method ini akan menerima parameter buku yang akan ditambahkan ke koleksi
-    //Push digunakan untuk menambahkan elemen baru ke akhir array
-    tambahBuku(buku) {
-        this.koleksi.push(buku);
-    }
-
-    // method tampilkanBuku() untuk menampilkan informasi buku yang ada di koleksi
-    // method ini akan menampilkan informasi buku dengan memanggil method info() dari setiap objek buku
-    //Loop digunakan untuk menampilkan setiap elemen dari koleksi
-    tampilkanBuku() {
-        this.koleksi.forEach(b => console.log(b.info()));
-        //menampilkan buku yang ada di koleksi
-        //console.log b.info() untuk menampilkan informasi buku
+    // Method abstrak untuk dipakai di subclass
+    deskripsi() {
+        throw new Error("Method 'deskripsi()' harus diimplementasikan di subclass.");
     }
 }
 
-// buat objek buku dari class Buku
-// buku1, buku2, dan buku3 adalah objek dari class Buku
-// objek ini akan memiliki properti judul dan penulis
+// ============================
+//  ENKAPSULASI (Encapsulation)
+// ============================
+// Class ini menggunakan enkapsulasi dengan properti private (menggunakan #).
+class Antrian {
+    #daftarPasien = []; // Properti private, hanya bisa diakses dalam class ini
 
-const buku1 = new Buku("Harry Potter", "J.K. Rowling");
-const buku2 = new Buku("Lord of the Rings", "J.R.R. Tolkien");
-const buku3 = new Buku("The Hobbit", "J.R.R. Tolkien");
-const perpustakaan = new Perpustakaan(); //call class Perpustakaan dengan nama objek perpustakaan
+    // Method untuk menambahkan pasien ke antrian
+    tambahPasien(pasien) {
+        this.#daftarPasien.push(pasien);
+        console.log(`${pasien.nama} telah ditambahkan ke antrian.`);
+    }
 
-perpustakaan.tambahBuku(buku1);//menambahkan buku1 ke koleksi buku 1
+    // Method untuk memproses pasien berikutnya
+    prosesPasien() {
+        if (this.#daftarPasien.length === 0) {
+            console.log("Tidak ada pasien dalam antrian.");
+            return;
+        }
+        const pasien = this.#daftarPasien.shift(); // Menghapus pasien pertama dalam antrian
+        console.log(`Pasien ${pasien.nama} dengan keluhan "${pasien.keluhan}" sedang ditangani.`);
+    }
 
-perpustakaan.tambahBuku(buku2);//menambahkan buku2 ke koleksi buku 2
-perpustakaan.tambahBuku(buku3);//menambahkan buku3 ke koleksi buku 3
+    // Method untuk menampilkan jumlah pasien dalam antrian
+    jumlahAntrian() {
+        return this.#daftarPasien.length;
+    }
+}
 
-perpustakaan.tampilkanBuku();//menampilkan buku yang ada di koleksi
+// ============================
+//  PEWARISAN (Inheritance)
+// ============================
+// Class "PasienUmum" dan "PasienBPJS" mewarisi class "Pasien"
+class PasienUmum extends Pasien {
+    constructor(nama, umur, keluhan, biaya) {
+        super(nama, umur, keluhan);
+        this.biaya = biaya;
+    }
+
+    // Implementasi method abstrak
+    deskripsi() {
+        return `Pasien Umum: ${this.nama}, Umur: ${this.umur} tahun, Keluhan: ${this.keluhan}, Biaya: Rp ${this.biaya}`;
+    }
+}
+
+class PasienBPJS extends Pasien {
+    constructor(nama, umur, keluhan, nomorBPJS) {
+        super(nama, umur, keluhan);
+        this.nomorBPJS = nomorBPJS;
+    }
+
+    // Implementasi method abstrak
+    deskripsi() {
+        return `Pasien BPJS: ${this.nama}, Umur: ${this.umur} tahun, Keluhan: ${this.keluhan}, No. BPJS: ${this.nomorBPJS}`;
+    }
+}
+
+// ============================
+//  POLIMORFISME (Polymorphism)
+// ============================
+// Method yang menerima objek pasien dan memanggil deskripsi mereka
+function tampilkanInfoPasien(pasien) {
+    console.log(pasien.deskripsi()); // Method deskripsi() bisa berbeda tergantung jenis pasien
+}
+
+// ============================
+//  IMPLEMENTASI PROGRAM
+// ============================
+
+// Membuat objek antrian
+const antrian = new Antrian();
+
+// Membuat beberapa objek pasien
+const pasien1 = new PasienUmum("Andi", 30, "Demam", 100000);
+const pasien2 = new PasienBPJS("Siti", 25, "Batuk", "BPJS-123456");
+const pasien3 = new PasienUmum("Budi", 40, "Pusing", 150000);
+
+// Menambahkan pasien ke antrian
+antrian.tambahPasien(pasien1);
+antrian.tambahPasien(pasien2);
+antrian.tambahPasien(pasien3);
+
+// Menampilkan informasi pasien menggunakan polimorfisme
+tampilkanInfoPasien(pasien1);
+tampilkanInfoPasien(pasien2);
+tampilkanInfoPasien(pasien3);
+
+// Memproses pasien dalam antrian
+console.log("\nMemproses pasien dalam antrian:");
+antrian.prosesPasien();
+antrian.prosesPasien();
+antrian.prosesPasien();
+antrian.prosesPasien(); // Akan menunjukkan bahwa antrian kosong
