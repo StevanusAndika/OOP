@@ -1,113 +1,143 @@
-// ============================
-//  ABSTRAKSI (Abstraction)
-// ============================
-// Kita membuat class abstrak "Pasien" yang hanya bisa diwarisi, bukan langsung dibuat objeknya.
-class Pasien {
-    constructor(nama, umur, keluhan) {
-        if (this.constructor === Pasien) {
-            throw new Error("Class Pasien adalah abstrak dan tidak bisa dibuat objek langsung.");
-        }
-        this.nama = nama;
-        this.umur = umur;
-        this.keluhan = keluhan;
-    }
+// 1. ENCAPSULATION (Pembungkusan data dan metode terkait)
+class Buku {
+  #isbn; // Private field (encapsulation)
 
-    // Method abstrak untuk dipakai di subclass
-    deskripsi() {
-        throw new Error("Method 'deskripsi()' harus diimplementasikan di subclass.");
+  constructor(judul, penulis, tahunTerbit, isbn) {
+    this.judul = judul;
+    this.penulis = penulis;
+    this.tahunTerbit = tahunTerbit;
+    this.#isbn = isbn;
+    this._rating = 0; // Protected convention (bukan benar-benar protected)
+  }
+
+  // Getter dan Setter untuk encapsulation
+  get isbn() {
+    return this.#isbn;
+  }
+
+  set rating(nilai) {
+    if (nilai >= 0 && nilai <= 5) {
+      this._rating = nilai;
+    } else {
+      console.log("Rating harus antara 0-5");
     }
+  }
+
+  get rating() {
+    return this._rating;
+  }
+
+  info() {
+    return `Buku: ${this.judul}, ditulis oleh ${this.penulis}, terbit tahun ${this.tahunTerbit}.`;
+  }
+
+  // Abstraction: metode internal yang tidak perlu diketahui pengguna
+  #generateKodePustaka() {
+    return `BK-${this.tahunTerbit}-${this.#isbn.slice(-4)}`;
+  }
+
+  getKodePustaka() {
+    return this.#generateKodePustaka();
+  }
 }
 
-// ============================
-//  ENKAPSULASI (Encapsulation)
-// ============================
-// Class ini menggunakan enkapsulasi dengan properti private (menggunakan #).
-class Antrian {
-    #daftarPasien = []; // Properti private, hanya bisa diakses dalam class ini
+// 2. INHERITANCE (Pewarisan)
+class BukuFiksi extends Buku {
+  constructor(judul, penulis, tahunTerbit, isbn, genre) {
+    super(judul, penulis, tahunTerbit, isbn);
+    this.genre = genre;
+  }
 
-    // Method untuk menambahkan pasien ke antrian
-    tambahPasien(pasien) {
-        this.#daftarPasien.push(pasien);
-        console.log(`${pasien.nama} telah ditambahkan ke antrian.`);
-    }
-
-    // Method untuk memproses pasien berikutnya
-    prosesPasien() {
-        if (this.#daftarPasien.length === 0) {
-            console.log("Tidak ada pasien dalam antrian.");
-            return;
-        }
-        const pasien = this.#daftarPasien.shift(); // Menghapus pasien pertama dalam antrian
-        console.log(`Pasien ${pasien.nama} dengan keluhan "${pasien.keluhan}" sedang ditangani.`);
-    }
-
-    // Method untuk menampilkan jumlah pasien dalam antrian
-    jumlahAntrian() {
-        return this.#daftarPasien.length;
-    }
+  // Polymorphism: Override metode info()
+  info() {
+    return `${super.info()} Genre: ${this.genre}.`;
+  }
 }
 
-// ============================
-//  PEWARISAN (Inheritance)
-// ============================
-// Class "PasienUmum" dan "PasienBPJS" mewarisi class "Pasien"
-class PasienUmum extends Pasien {
-    constructor(nama, umur, keluhan, biaya) {
-        super(nama, umur, keluhan);
-        this.biaya = biaya;
-    }
+class BukuNonFiksi extends Buku {
+  constructor(judul, penulis, tahunTerbit, isbn, subjek) {
+    super(judul, penulis, tahunTerbit, isbn);
+    this.subjek = subjek;
+  }
 
-    // Implementasi method abstrak
-    deskripsi() {
-        return `Pasien Umum: ${this.nama}, Umur: ${this.umur} tahun, Keluhan: ${this.keluhan}, Biaya: Rp ${this.biaya}`;
-    }
+  // Polymorphism: Override metode info()
+  info() {
+    return `${super.info()} Subjek: ${this.subjek}.`;
+  }
 }
 
-class PasienBPJS extends Pasien {
-    constructor(nama, umur, keluhan, nomorBPJS) {
-        super(nama, umur, keluhan);
-        this.nomorBPJS = nomorBPJS;
-    }
+// 3. ABSTRACTION (Antarmuka sederhana untuk kompleksitas di baliknya)
+class Perpustakaan {
+  constructor(nama) {
+    this.nama = nama;
+    this.koleksi = [];
+  }
 
-    // Implementasi method abstrak
-    deskripsi() {
-        return `Pasien BPJS: ${this.nama}, Umur: ${this.umur} tahun, Keluhan: ${this.keluhan}, No. BPJS: ${this.nomorBPJS}`;
+  tambahBuku(buku) {
+    if (!(buku instanceof Buku)) {
+      console.log("Hanya bisa menambahkan objek Buku");
+      return;
     }
+    this.koleksi.push(buku);
+    console.log(`Buku "${buku.judul}" ditambahkan ke ${this.nama}`);
+  }
+
+  tampilkanBuku() {
+    console.log(`\nKoleksi Buku di ${this.nama}:`);
+    this.koleksi.forEach((b, i) => 
+      console.log(`${i + 1}. ${b.info()} Rating: ${b.rating}`));
+  }
+
+  cariBuku(kriteria) {
+    return this.koleksi.filter(buku => 
+      buku.judul.toLowerCase().includes(kriteria.toLowerCase()) || 
+      buku.penulis.toLowerCase().includes(kriteria.toLowerCase())
+    );
+  }
 }
 
-// ============================
-//  POLIMORFISME (Polymorphism)
-// ============================
-// Method yang menerima objek pasien dan memanggil deskripsi mereka
-function tampilkanInfoPasien(pasien) {
-    console.log(pasien.deskripsi()); // Method deskripsi() bisa berbeda tergantung jenis pasien
-}
+// 4. POLYMORPHISM (Banyak bentuk)
+const cetakInfoBuku = (buku) => {
+  console.log(buku.info());
+};
 
-// ============================
-//  IMPLEMENTASI PROGRAM
-// ============================
+// Penggunaan
+const buku1 = new BukuFiksi(
+  "Harry Potter", 
+  "J.K. Rowling", 
+  1997, 
+  "978-0439708180", 
+  "Fantasi"
+);
+buku1.rating = 4.5;
 
-// Membuat objek antrian
-const antrian = new Antrian();
+const buku2 = new BukuNonFiksi(
+  "Sapiens", 
+  "Yuval Noah Harari", 
+  2011, 
+  "978-0062316097", 
+  "Sejarah"
+);
+buku2.rating = 5;
 
-// Membuat beberapa objek pasien
-const pasien1 = new PasienUmum("Andi", 30, "Demam", 100000);
-const pasien2 = new PasienBPJS("Siti", 25, "Batuk", "BPJS-123456");
-const pasien3 = new PasienUmum("Budi", 40, "Pusing", 150000);
+const perpustakaan = new Perpustakaan("Perpustakaan Nasional");
+perpustakaan.tambahBuku(buku1);
+perpustakaan.tambahBuku(buku2);
 
-// Menambahkan pasien ke antrian
-antrian.tambahPasien(pasien1);
-antrian.tambahPasien(pasien2);
-antrian.tambahPasien(pasien3);
+perpustakaan.tampilkanBuku();
 
-// Menampilkan informasi pasien menggunakan polimorfisme
-tampilkanInfoPasien(pasien1);
-tampilkanInfoPasien(pasien2);
-tampilkanInfoPasien(pasien3);
+// Demonstrasi polymorphism
+console.log("\nDemonstrasi Polymorphism:");
+cetakInfoBuku(buku1);
+cetakInfoBuku(buku2);
 
-// Memproses pasien dalam antrian
-console.log("\nMemproses pasien dalam antrian:");
-antrian.prosesPasien();
-antrian.prosesPasien();
-antrian.prosesPasien();
-antrian.prosesPasien(); // Akan menunjukkan bahwa antrian kosong
+// Demonstrasi encapsulation
+console.log("\nDemonstrasi Encapsulation:");
+// console.log(buku1.#isbn); // Error: Private field
+console.log("ISBN melalui getter:", buku1.isbn);
+console.log("Kode Pustaka:", buku1.getKodePustaka());
+
+// Demonstrasi pencarian
+console.log("\nHasil pencarian 'Harry':");
+const hasilCari = perpustakaan.cariBuku("Harry");
+hasilCari.forEach(b => console.log(b.info()));
