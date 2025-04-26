@@ -90,8 +90,8 @@
         
         <!-- Footer -->
         <footer class="bg-gray-50 text-gray-600 py-8 px-4 text-center border-t border-gray-200">
-            <p>© 2025 Stevanus Andika - Object Oriented Programming</p>
-            <p class="mt-2 text-gray-400">Hosted on GitHub Pages | Talwind CSS And Vue JS</p>
+    <p>© {{ currentYear }} Stevanus Andika - Object Oriented Programming</p>
+    <p class="mt-2 text-gray-400">Hosted on GitHub Pages</p>
         </footer>
     </div>
     
@@ -198,7 +198,7 @@
                         link: "https://stevanusandika.github.io/OOP/pertemuan%2016/" 
                     }
                 ]);
-                
+                const currentYear = ref(new Date().getFullYear());
                 const scrollProgress = ref(0);
                 const hoverCard = ref(null);
                 const visibleCards = ref([]);
@@ -255,7 +255,8 @@
                     scrollProgress,
                     hoverCard,
                     visibleCards,
-                    meetingCards
+                    meetingCards,
+                    currentYear
                 };
             }
         }).mount('#app');
