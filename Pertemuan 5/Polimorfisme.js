@@ -49,7 +49,7 @@ class Burung extends Hewan {
       hewan instanceof Serigala ? hewan.berburu() :
       'Tidak ada aktivitas khusus'
     }`);
-    console.log("-------------------------------------------------------------------");
+    console.log(`  Info: ${hewan.info()}`);
   });
   
   console.log("===================================================================");
