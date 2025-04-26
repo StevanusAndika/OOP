@@ -60,7 +60,7 @@ class Mobile {
         return kendaraanA.getUmur() - kendaraanB.getUmur();
     }
 }
-console.log("=================== Contoh abstrak implementasi kendaraan ===========================")
+console.log("=================== Contoh abstrak  ===========================")
 // Contoh penggunaan kelas abstrak
 console.log("Kendaraan tidak bisa diinstansiasi langsung");
 console.log("====================================================================================")
