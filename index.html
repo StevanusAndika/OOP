@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Pertemuan OOP</title>
+    <!-- Production build of Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Production build of Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.prod.js"></script>
+    <style>
+        .meeting-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .meeting-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #93c5fd, #c4b5fd);
+            z-index: 100;
+            width: 0%;
+        }
+        
+        body {
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <div id="app">
+        <!-- Progress Bar -->
+        <div class="progress-bar" :style="{width: scrollProgress + '%'}"></div>
+        
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 py-16 px-4 text-center border-b border-gray-200">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Daftar Pertemuan OOP</h1>
+            <p class="text-xl md:text-2xl opacity-90">Pilih pertemuan yang ingin Anda buka</p>
+            <div class="mt-8 animate-bounce">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-12 max-w-4xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div 
+                    v-for="meeting in meetings" 
+                    :key="meeting.number"
+                    class="meeting-card bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 border border-gray-100"
+                    :class="{visible: visibleCards.includes(meeting.number)}"
+                    @mouseenter="hoverCard = meeting.number"
+                    @mouseleave="hoverCard = null"
+                    ref="meetingCards"
+                >
+                    <a :href="meeting.link" target="_blank" class="block h-full">
+                        <div class="p-6">
+                            <div 
+                                class="flex items-center justify-center w-12 h-12 rounded-full mb-4 font-bold transition-colors duration-300"
+                                :class="hoverCard === meeting.number ? 
+                                    'bg-blue-500 text-white' : 
+                                    'bg-blue-50 text-blue-500'"
+                            >
+                                {{ meeting.number }}
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ meeting.title }}</h3>
+                            <p class="text-gray-600">{{ meeting.description }}</p>
+                            <div class="mt-4 flex items-center transition-colors duration-300"
+                                :class="hoverCard === meeting.number ? 'text-blue-500' : 'text-blue-400'">
+                                <span>Lihat Hasil Pertemuan</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-gray-50 text-gray-600 py-8 px-4 text-center border-t border-gray-200">
+            <p>© 2025 Stevanus Andika - Object Oriented Programming</p>
+            <p class="mt-2 text-gray-400">Hosted on GitHub Pages | Talwind CSS And Vue JS</p>
+        </footer>
+    </div>
+    
+    <script>
+        const { createApp, ref, onMounted, onUnmounted } = Vue;
+        
+        createApp({
+            setup() {
+                const meetings = ref([
+                    { 
+                        number: 1, 
+                        title: "Pengenalan PBO", 
+                        description: "Pengantar mata kuliah dan konsep dasar PBO",
+                        link: "https://stevanusandika.github.io/OOP/Pertemuan%201-2/" 
+                    },
+                    { 
+                        number: 2, 
+                        title: "Konsep Dasar PBO", 
+                        description: "Prinsip dasar OOP dan paradigma pemrograman",
+                        link: "https://stevanusandika.github.io/OOP/Pertemuan%201-2/" 
+                    },
+                    { 
+                        number: 3, 
+                        title: "Kelas dan Objek", 
+                        description: "Struktur kelas dan pembuatan objek dalam JavaScript",
+                        link: "https://stevanusandika.github.io/OOP/Pertemuan%203/" 
+                    },
+                    { 
+                        number: 4, 
+                        title: "Enkapsulasi", 
+                        description: "Pengelolaan akses data dan modifier akses",
+                        link: "https://stevanusandika.github.io/OOP/Pertemuan%204/" 
+                    },
+                    { 
+                        number: 5, 
+                        title: "Inheritance & Polymorphism", 
+                        description: "Pewarisan dan polimorfisme dalam JavaScript",
+                        link: "https://stevanusandika.github.io/OOP/Pertemuan%205/" 
+                    },
+                    { 
+                        number: 6, 
+                        title: "Abstraksi & Interface", 
+                        description: "Abstract class dan implementasi interface",
+                        link: "https://stevanusandika.github.io/OOP/pertemuan%206/" 
+                    },
+                    { 
+                        number: 7, 
+                        title: "Rekap Materi 1-6", 
+                        description: "Review konsep dan persiapan UTS",
+                        link: "https://stevanusandika.github.io/OOP/pertemuan%207/" 
+                    },
+                    { 
+                        number: 8, 
+                        title: "Ujian Tengah Semester", 
+                        description: "UTS Pemrograman Berorientasi Objek",
+                        link: "https://stevanusandika.github.io/OOP/pertemuan%208/" 
+                    },
+                    { 
+                        number: 9, 
+                        title: "Exception Handling", 
+                        description: "Penanganan kesalahan dalam JavaScript",
+                        link: "https://stevanusandika.github.io/OOP/pertemuan%209/" 
+                    },
+                    { 
+                        number: 10, 
+                        title: "Collections & Generics", 
+                        description: "Struktur data dan generics dalam JavaScript",
+                        link: "https://stevanusandika.github.io/OOP/pertemuan%2010/" 
+                    },
+                    { 
+                        number: 11, 
+                        title: "File I/O & Serialisasi", 
+                        description: "Membaca/menulis file dan serialisasi objek",
+                        link: "https://stevanusandika.github.io/OOP/pertemuan%2011/" 
+                    },
+                    { 
+                        number: 12, 
+                        title: "Design Patterns", 
+                        description: "Implementasi pola desain dalam JavaScript",
+                        link: "https://stevanusandika.github.io/OOP/pertemuan%2012/" 
+                    },
+                    { 
+                        number: 13, 
+                        title: "GUI Programming", 
+                        description: "Pengembangan antarmuka grafis",
+                        link: "https://stevanusandika.github.io/OOP/pertemuan%2013/" 
+                    },
+                    { 
+                        number: 14, 
+                        title: "Refactoring & Testing", 
+                        description: "Teknik refactoring dan pengujian perangkat lunak",
+                        link: "https://stevanusandika.github.io/OOP/pertemuan%2014/" 
+                    },
+                    { 
+                        number: 15, 
+                        title: "Rekap Materi 9-14", 
+                        description: "Review materi dan persiapan UAS",
+                        link: "https://stevanusandika.github.io/OOP/pertemuan%2015/" 
+                    },
+                    { 
+                        number: 16, 
+                        title: "Ujian Akhir Semester", 
+                        description: "UAS Pemrograman Berorientasi Objek",
+                        link: "https://stevanusandika.github.io/OOP/pertemuan%2016/" 
+                    }
+                ]);
+                
+                const scrollProgress = ref(0);
+                const hoverCard = ref(null);
+                const visibleCards = ref([]);
+                const meetingCards = ref([]);
+                
+                const handleScroll = () => {
+                    // Update scroll progress
+                    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                    scrollProgress.value = (scrollTop / scrollHeight) * 100;
+                    
+                    // Check card visibility
+                    const triggerBottom = window.innerHeight / 5 * 4;
+                    
+                    meetingCards.value.forEach((card, index) => {
+                        const cardTop = card.getBoundingClientRect().top;
+                        const meetingNumber = meetings.value[index].number;
+                        
+                        if (cardTop < triggerBottom && !visibleCards.value.includes(meetingNumber)) {
+                            visibleCards.value.push(meetingNumber);
+                        }
+                    });
+                };
+                
+                onMounted(() => {
+                    window.addEventListener('scroll', handleScroll);
+                    // Initial check
+                    handleScroll();
+                    
+                    // Initialize Intersection Observer
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            const index = Array.from(meetingCards.value).indexOf(entry.target);
+                            if (index !== -1 && entry.isIntersecting) {
+                                const meetingNumber = meetings.value[index].number;
+                                if (!visibleCards.value.includes(meetingNumber)) {
+                                    visibleCards.value.push(meetingNumber);
+                                }
+                            }
+                        });
+                    }, { threshold: 0.1 });
+                    
+                    meetingCards.value.forEach(card => {
+                        observer.observe(card);
+                    });
+                });
+                
+                onUnmounted(() => {
+                    window.removeEventListener('scroll', handleScroll);
+                });
+                
+                return {
+                    meetings,
+                    scrollProgress,
+                    hoverCard,
+                    visibleCards,
+                    meetingCards
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
