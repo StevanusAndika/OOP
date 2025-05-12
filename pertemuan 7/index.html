@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Inheritance</title>
+</head>
+<body>
+<div id="coba"></div>
+<script>
+ 
+//untuk parent class
+
+class Manusia {
+    constructor(nama ){
+        this.nama = nama; //untuk menyimpan nama
+    }
+    
+
+    //method perkenalan 
+    perkenalan(){
+      return `Hallo nama saya ${this.nama}`; //mengembalikan string
+    }
+}
+
+    //extends class manusia(chid class)
+   class Mahasiwa extends Manusia{
+    constructor(nama,nim,prodi,angkatan){
+        super(nama); //call constructor parent
+        this.nim = nim; // save nim
+        this.prodi = prodi ; //save prodi
+        this.angkatan = angkatan; //save angkatan
+
+    }
+    //method perkenalan
+    perkenalan(){
+        return `Hallo nama saya ${this.nama} nim saya ${this.nim} dan jurusan saya ${this.prodi} dan saya angkatan ${this.angkatan}`; 
+    }
+   }
+    //membuat objek dari class mahasiswa
+    const mhs = new Mahasiwa('Steven','202303110008','Rekayasa Perangkat Lunak','2023');
+
+    //tampilkan hasil perkenalan dalam elemen div html dengan panggil obj
+    document.getElementById('coba').innerHTML = mhs.perkenalan() ;
+    alert('object mahasiswa berhasil dibuat');
+   
+
+
+</script>
+    
+</body>
+</html>
