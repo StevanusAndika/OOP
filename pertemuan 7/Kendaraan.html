@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Info Kendaraan</title>
+</head>
+<body>
+
+  <div id="coba"></div>
+
+  <script>
+    // Kelas induk: Kendaraan
+    class Kendaraan {
+      constructor(merk, warna, kecepatan) {
+        this.merk = merk;
+        this.warna = warna;
+        this.kecepatan = kecepatan;
+      }
+
+      berjalan() {
+        throw new Error("Method 'berjalan()' harus diimplementasikan.");
+      }
+    }
+
+    // Kelas turunan: Mobil
+    class Mobil extends Kendaraan {
+      constructor(merk, warna, kecepatan, jumlahRoda, tahun) {
+        super(merk, warna, kecepatan);
+        this.jumlahRoda = jumlahRoda;
+        this.tahun = tahun;
+      }
+
+      berjalan() {
+        return `Mobil dengan merk ${this.merk}, warna ${this.warna}, kecepatan ${this.kecepatan} km/jam, tahun ${this.tahun}, dan ${this.jumlahRoda} roda sedang berjalan di jalan raya.`;
+      }
+    }
+
+    // Kelas turunan: Sepeda
+    class Sepeda extends Kendaraan {
+      constructor(merk, warna, kecepatan, jumlahRoda, tahun) {
+        super(merk, warna, kecepatan);
+        this.jumlahRoda = jumlahRoda;
+        this.tahun = tahun;
+      }
+
+      berjalan() {
+        return `Sepeda dengan merk ${this.merk}, warna ${this.warna}, kecepatan ${this.kecepatan} km/jam, tahun ${this.tahun}, dan ${this.jumlahRoda} roda sedang berjalan di trotoar.`;
+      }
+    }
+
+    // Inisialisasi objek
+    const mobil = new Mobil('Toyota', 'Hitam', 100, 4, 2023);
+    const sepeda = new Sepeda('Polygon', 'Merah', 20, 2, 2023);
+
+    // Menampilkan hasil ke elemen HTML
+    document.getElementById('coba').innerHTML = 
+      mobil.berjalan() + "<br><br>" + sepeda.berjalan();
+  </script>
+
+</body>
+</html>
